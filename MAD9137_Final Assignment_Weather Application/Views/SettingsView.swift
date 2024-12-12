@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var viewModel: WeatherViewModel
-    @AppStorage("refreshInterval") private var refreshInterval = 300.0 // default 5 minutes
+    @AppStorage("refreshInterval") private var refreshInterval = 60.0
 
     let refreshIntervalOptions: [(String, TimeInterval)] = [
         ("1 minute", 60),
@@ -22,22 +22,22 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                Color(red: 0.4, green: 0.5, blue: 0.9)
+                    .ignoresSafeArea()
                 List {
-                    Section("Auto Refresh") {
-                        Picker("Refresh Interval", selection: $refreshInterval) {
-                            ForEach(refreshIntervalOptions, id: \.1) { option in
-                                Text(option.0).tag(option.1)
-                            }
+                    Picker("Refresh Interval", selection: $refreshInterval) {
+                        ForEach(refreshIntervalOptions, id: \.1) { option in
+                            Text(option.0).tag(option.1)
                         }
-                        .onChange(of: refreshInterval) { newValue in
-                            viewModel.updateRefreshTimer(interval: newValue)
-                        }
+                    }
+                    .onChange(of: refreshInterval) { newValue in
+                        viewModel.updateRefreshTimer(interval: newValue)
                     }
 
                     Section {
                         NavigationLink {
                             AboutView()
-                                .toolbar(.hidden, for: .tabBar)
+
                         } label: {
                             Text("About")
                         }
@@ -46,6 +46,10 @@ struct SettingsView: View {
                 .scrollContentBackground(.hidden)
             }
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color(red: 0.4, green: 0.5, blue: 0.9), for: .navigationBar)
+            .toolbarBackground(.visible)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
     }
 }

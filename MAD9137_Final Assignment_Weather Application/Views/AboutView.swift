@@ -8,32 +8,69 @@
 import SwiftUI
 
 struct AboutView: View {
+    @State private var tapCount = 0
+    @State private var showKidPhoto = false
+
     var body: some View {
         ZStack {
-            VStack(spacing: 20) {
-                Image(systemName: "cloud.sun.fill")
-                    .font(.system(size: 80))
-                    .foregroundColor(.white)
-                
-                Text("Weather App")
-                    .font(.title)
-                    .bold()
-                    .foregroundColor(.white)
-                
-                Text("Version 1.0")
-                    .foregroundColor(.white)
-                
-                Text("© 2024 Your Name")
-                    .foregroundColor(.white)
-                
-                Text("Weather data provided by OpenWeatherMap")
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.8))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+            // Background
+            Color(red: 0.4, green: 0.5, blue: 0.9)
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 30) {
+                    // Profile Photo with tap gesture
+                    Image(showKidPhoto ? "hiddenPic" : "profilePic")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 300, height: 300)
+                        .clipShape(Circle())
+                        .onTapGesture {
+                            tapCount += 1
+                            if tapCount >= 3 {
+                                withAnimation(.spring()) {
+                                    showKidPhoto.toggle()
+                                }
+                                tapCount = 0
+                            }
+                        }
+                  
+                        .padding(.top, 30)
+                    
+                    // Profile Info
+                    VStack(spacing: 15) {
+                        Text("Terry Wong")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        Text("Student ID: 041101011")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                    
+                    // App Info
+                    VStack(spacing: 10) {
+                        Text("Version 1.0")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                    
+                    Text("© 2024 Terry Wong")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .padding(.top, 30)
+                }
+                .padding()
             }
         }
         .navigationTitle("About")
-        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+struct AboutView_Previews: PreviewProvider {
+    static var previews: some View {
+        AboutView()
+            .environmentObject(WeatherViewModel())
     }
 }
