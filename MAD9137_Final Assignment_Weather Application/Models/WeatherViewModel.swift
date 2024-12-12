@@ -14,6 +14,7 @@ class WeatherViewModel: ObservableObject {
     @Published var error: Error?
     private let weatherService = WeatherService()
     private let userDefaultsKey = "savedCities"
+    @Published var selectedCityWeatherData: WeatherData?
     
     init() {
         loadCities()
@@ -31,11 +32,11 @@ class WeatherViewModel: ObservableObject {
         
         // Set default cities if no saved data
         cities = [
-            City(name: "Ottawa", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String()),
-            City(name: "Tokyo", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String()),
-            City(name: "New York", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String()),
-            City(name: "London", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String()),
-            City(name: "Sydney", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String())
+            City(name: "Ottawa", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String(), coordinates: Coordinates(lat: 0, lon: 0)),
+            City(name: "Tokyo", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String(), coordinates: Coordinates(lat: 0, lon: 0)),
+            City(name: "New York", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String(), coordinates: Coordinates(lat: 0, lon: 0)),
+            City(name: "London", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String(), coordinates: Coordinates(lat: 0, lon: 0)),
+            City(name: "Sydney", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String(), coordinates: Coordinates(lat: 0, lon: 0))
         ]
         saveCities()
     }
@@ -76,7 +77,8 @@ class WeatherViewModel: ObservableObject {
                         weatherIcon: weatherResponse.weather.first?.icon ?? "",
                         localTime: Date(timeIntervalSince1970: Double(weatherResponse.dt)),
                         country: weatherResponse.sys.country,
-                        timeZone: weatherResponse.timezone.map { String($0) }
+                        timeZone: weatherResponse.timezone.map { String($0) },
+                        coordinates: Coordinates(lat: weatherResponse.coord.lat, lon: weatherResponse.coord.lon)
                     )
                     updatedCities.append(city)
                 } catch {

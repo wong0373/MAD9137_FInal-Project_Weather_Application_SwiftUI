@@ -10,62 +10,134 @@ import SwiftUI
 struct CityListView: View {
     @EnvironmentObject var viewModel: WeatherViewModel
     @State private var showSearchView = false
+    @State private var selectedCity: City?
+    @State private var navigationPath = NavigationPath()
 
     var body: some View {
         NavigationView {
             ZStack {
-                Color(red: 0.4, green: 0.5, blue: 0.9)
-                    .ignoresSafeArea(.all)
-
-                ScrollView {
-                    VStack(spacing: 0) {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .tint(.white)
-                                .scaleEffect(1.5)
-                                .padding()
-                        }
-                        ForEach(viewModel.cities) { city in
-                            CityRowView(city: city, onDelete: {
-                                viewModel.deleteCity(city)
-                            })
-                            Rectangle()
-                                .fill(Color.white).opacity(0.5)
-                                .frame(width: 370, height: 2)
-                                .padding(.horizontal, 20)
-                        }
-                    }.background(Color.clear)
-                }
-                .scrollIndicators(.hidden)
+                BackgroundView()
+                MainContentView(
+                    viewModel: self.viewModel,
+                    selectedCity: self.$selectedCity
+                )
             }
+            .navigationBarSetup(
+                showSearchView: self.$showSearchView,
+                viewModel: self.viewModel
+            )
+        }
+        .onAppear {
+            self.viewModel.fetchAllCityWeather()
+        }
+    }
+}
+
+private struct BackgroundView: View {
+    var body: some View {
+        Color(red: 0.4, green: 0.5, blue: 0.9)
+            .ignoresSafeArea(.all)
+    }
+}
+
+private struct MainContentView: View {
+    @ObservedObject var viewModel: WeatherViewModel
+    @Binding var selectedCity: City?
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                LoadingView(isLoading: self.viewModel.isLoading)
+                CitiesList(
+                    viewModel: self.viewModel,
+                    selectedCity: self.$selectedCity
+                )
+            }
+            .background(Color.clear)
+        }
+        .scrollIndicators(.hidden)
+    }
+}
+
+// MARK: - Loading View
+
+private struct LoadingView: View {
+    let isLoading: Bool
+
+    var body: some View {
+        if self.isLoading {
+            ProgressView()
+                .tint(.white)
+                .scaleEffect(1.5)
+                .padding()
+        }
+    }
+}
+
+private struct CitiesList: View {
+    @ObservedObject var viewModel: WeatherViewModel
+    @Binding var selectedCity: City?
+
+    var body: some View {
+        ForEach(self.viewModel.cities) { city in
+            VStack(spacing: 0) {
+                CityRowView(
+                    city: city,
+                    onDelete: { self.viewModel.deleteCity(city) }
+//                    onTap: { self.selectedCity = city }
+                )
+
+                DividerView()
+            }
+        }
+    }
+}
+
+private struct DividerView: View {
+    var body: some View {
+        Rectangle()
+            .fill(Color.white.opacity(0.5))
+            .frame(width: 370, height: 2)
+            .padding(.horizontal, 20)
+    }
+}
+
+private struct AddButton: View {
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: self.action) {
+            ZStack {
+                Circle()
+                    .foregroundColor(.white)
+                    .frame(width: 25, height: 25)
+                Image(systemName: "plus")
+                    .foregroundColor(Color(red: 0.4, green: 0.5, blue: 0.9))
+                    .font(.subheadline)
+            }
+        }
+    }
+}
+
+private extension View {
+    func navigationBarSetup(showSearchView: Binding<Bool>, viewModel: WeatherViewModel) -> some View {
+        self
             .navigationTitle("Algonquin Weather")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color(red: 0.4, green: 0.5, blue: 0.9), for: .navigationBar)
             .toolbarBackground(.visible)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        showSearchView = true
-                    }) {
-                        ZStack {
-                            Circle()
-                                .foregroundColor(.white)
-                                .frame(width: 25, height: 25)
-                            Image(systemName: "plus")
-                                .foregroundColor(Color(red: 0.4, green: 0.5, blue: 0.9))
-                                .font(.subheadline)
-                        }
+                    AddButton {
+                        showSearchView.wrappedValue = true
                     }
                 }
-            }.sheet(isPresented: $showSearchView) {
+            }
+            .sheet(isPresented: showSearchView) {
                 SearchCityView()
                     .environmentObject(viewModel)
             }
             .toolbarColorScheme(.dark, for: .navigationBar)
-        }
-        .onAppear {
-            viewModel.fetchAllCityWeather()
-        }
     }
 }
 

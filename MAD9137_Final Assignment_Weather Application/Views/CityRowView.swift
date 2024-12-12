@@ -16,7 +16,7 @@ struct CityRowView: View {
     
     private let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "hh:mm a" // Changed to 12-hour format with AM/PM
+        formatter.dateFormat = "hh:mm a"
         return formatter
     }()
     
@@ -25,15 +25,12 @@ struct CityRowView: View {
     }
     
     private func startTimer() {
-        // Calculate seconds until the next minute
         let calendar = Calendar.current
         let seconds = calendar.component(.second, from: Date())
         let delay = 60 - Double(seconds)
         
-        // Initial delay to sync with the minute
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             updateTime()
-            // Start the timer exactly on the minute
             timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
                 updateTime()
             }
@@ -44,7 +41,6 @@ struct CityRowView: View {
         currentTime = Date()
     }
     
-    // Rest of your view code remains the same...
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .top) {
