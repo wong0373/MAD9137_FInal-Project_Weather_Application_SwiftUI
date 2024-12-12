@@ -17,14 +17,16 @@ struct CityWeatherDetailView: View {
                 longitude: city.coordinates.lon
             ))
             .ignoresSafeArea()
-            .opacity(0.8)
-            
+           
             LinearGradient(
                 gradient: Gradient(colors: [
-                    color(for: city.temperature).opacity(1.0),
+                    color(for: city.temperature).opacity(1.2),
+                    color(for: city.temperature).opacity(0.7),
                     color(for: city.temperature).opacity(0.6),
+                    color(for: city.temperature).opacity(0.4),
                     color(for: city.temperature).opacity(0.2),
-                    color(for: city.temperature).opacity(0.1)
+                    color(for: city.temperature).opacity(0.1),
+         
                 ]),
                 startPoint: .bottom,
                 endPoint: .top
@@ -57,8 +59,8 @@ struct CityWeatherDetailView: View {
         let normalized = (temperature + 30) / 70
         return Color(
             hue: (1.0 - normalized) * 2 / 3,
-            saturation: 0.9,
-            brightness: 0.8
+            saturation: 1.0,
+            brightness: 0.7
         )
     }
     
@@ -249,7 +251,7 @@ struct CityWeatherDetailView_Previews: PreviewProvider {
         CityWeatherDetailView(
             city: City(
                 name: "New York",
-                temperature: 38.0,
+                temperature: 12.0,
                 weatherDescription: "Clear sky",
                 weatherIcon: "01d",
                 localTime: Date(),
