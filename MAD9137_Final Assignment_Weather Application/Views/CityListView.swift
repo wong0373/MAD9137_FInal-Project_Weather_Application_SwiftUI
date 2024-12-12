@@ -143,10 +143,6 @@ private extension View {
     }
 }
 
-
-
-
-
 struct CityListView_Previews: PreviewProvider {
     static var previews: some View {
         CityListView()
