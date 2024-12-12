@@ -7,10 +7,15 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		1FB103AC2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MAD9137_Final Assignment_Weather Application.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB104142D08C1C5001A3C85 /* MAD9137_Final Assignment_Weather Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MAD9137_Final Assignment_Weather Application.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		1F671C322D0A78B90000E008 /* ViewModels */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		1FB103AE2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "MAD9137_Final Assignment_Weather Application";
@@ -33,16 +38,9 @@
 			isa = PBXGroup;
 			children = (
 				1FB103AE2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application */,
-				1FB103AD2D08B2E6001A3C85 /* Products */,
+				1FB104142D08C1C5001A3C85 /* MAD9137_Final Assignment_Weather Application.app */,
+				1F671C322D0A78B90000E008 /* ViewModels */,
 			);
-			sourceTree = "<group>";
-		};
-		1FB103AD2D08B2E6001A3C85 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1FB103AC2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -61,13 +59,14 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				1F671C322D0A78B90000E008 /* ViewModels */,
 				1FB103AE2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application */,
 			);
 			name = "MAD9137_Final Assignment_Weather Application";
 			packageProductDependencies = (
 			);
 			productName = "MAD9137_Final Assignment_Weather Application";
-			productReference = 1FB103AC2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application.app */;
+			productReference = 1FB104142D08C1C5001A3C85 /* MAD9137_Final Assignment_Weather Application.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -95,7 +94,7 @@
 			mainGroup = 1FB103A32D08B2E6001A3C85;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 1FB103AD2D08B2E6001A3C85 /* Products */;
+			productRefGroup = 1FB103A32D08B2E6001A3C85;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -255,6 +254,10 @@
 				DEVELOPMENT_TEAM = 39JGDR8LL6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MAD9137-Final-Assignment-Weather-Application-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show weather for your current position";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +287,10 @@
 				DEVELOPMENT_TEAM = 39JGDR8LL6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MAD9137-Final-Assignment-Weather-Application-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show weather for your current position";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
