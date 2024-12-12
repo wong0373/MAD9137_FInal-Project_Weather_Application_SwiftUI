@@ -5,6 +5,7 @@ struct CityWeatherDetailView: View {
     let city: City
     @ObservedObject var viewModel: WeatherViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var isCelsius = true
     
     var body: some View {
         ZStack {
@@ -47,6 +48,10 @@ struct CityWeatherDetailView: View {
             print("Forecast data count: \(viewModel.hourlyForecast.count)")
         }
     }
+
+    private func convertTemperature(_ celsius: Double) -> Double {
+        return isCelsius ? celsius : (celsius * 9 / 5) + 32
+    }
     
     private func color(for temperature: Double) -> Color {
         let normalized = (temperature + 30) / 70
@@ -78,9 +83,15 @@ struct CityWeatherDetailView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.white)
             
-            Text("\(Int(city.temperature))°")
-                .font(.system(size: 120, weight: .semibold))
-                .foregroundColor(.white)
+            // Modified temperature display with toggle
+            VStack {
+                Text("\(Int(round(convertTemperature(city.temperature))))°\(isCelsius ? "C" : "F")")
+                    .font(.system(size: 120, weight: .semibold))
+                    .foregroundColor(.white)
+                    .onTapGesture {
+                        isCelsius.toggle()
+                    }
+            }
             
             Text("\(formatDate(city.localTime))")
                 .font(.system(size: 30, weight: .semibold))
