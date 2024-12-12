@@ -8,7 +8,7 @@
 import Foundation
 
 class WeatherService: ObservableObject {
-    private let apiKey = "7952697f77e6f0cb825f70e56819523d"
+    private let apiKey = "aadcba574a28095c11c6b00b1dc3e7fc"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
 
     @Published var cities: [City] = []

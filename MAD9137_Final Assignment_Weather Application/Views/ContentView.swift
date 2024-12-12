@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var weatherViewModel: WeatherViewModel
+
     var body: some View {
-        CityListView()
+        MainTabView()
+            .environmentObject(weatherViewModel)
     }
 }

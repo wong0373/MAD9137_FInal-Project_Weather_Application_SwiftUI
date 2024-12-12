@@ -42,13 +42,13 @@ struct CityWeatherDetailView: View {
                 }
                 .padding(.horizontal)
             }
-        }
-        .navigationBarHidden(true)
-        .task {
-            print("Starting forecast fetch for \(city.name)")
-            await viewModel.fetchForecast(for: city)
-            print("Forecast data count: \(viewModel.hourlyForecast.count)")
-        }
+        }.toolbar(.hidden, for: .tabBar)
+            .navigationBarHidden(true)
+            .task {
+                print("Starting forecast fetch for \(city.name)")
+                await viewModel.fetchForecast(for: city)
+                print("Forecast data count: \(viewModel.hourlyForecast.count)")
+            }
     }
 
     private func convertTemperature(_ celsius: Double) -> Double {
@@ -68,9 +68,9 @@ struct CityWeatherDetailView: View {
         HStack {
             Button(action: { dismiss() }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.black.opacity(0.8))
+                    .foregroundColor(.black)
                     .padding(18)
-                    .background(Color.white.opacity(0.4))
+                    .background(Color.white.opacity(0.9))
                     .clipShape(Circle())
             }
             
