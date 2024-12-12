@@ -2,191 +2,235 @@ import MapKit
 import SwiftUI
 
 struct CityWeatherDetailView: View {
-    let latitude: Double
-    let longitude: Double
-    let cityName: String
-    let weatherData: WeatherData
+    let city: City
+    @ObservedObject var viewModel: WeatherViewModel
+    @Environment(\.dismiss) private var dismiss
     
-    private let gradient = LinearGradient(
-        colors: [Color(red: 0.4, green: 0.5, blue: 0.9), Color(red: 0.2, green: 0.3, blue: 0.7)],
-        startPoint: .top,
-        endPoint: .bottom
-    )
+    struct MapView: UIViewRepresentable {
+        let coordinate: CLLocationCoordinate2D
+        
+        func makeUIView(context: Context) -> MKMapView {
+            let mapView = MKMapView()
+            mapView.showsUserLocation = false
+            mapView.isZoomEnabled = false // Disable zoom
+            mapView.isScrollEnabled = false // Disable scroll
+            mapView.isRotateEnabled = false
+            
+            mapView.pointOfInterestFilter = .excludingAll
+            return mapView
+        }
+        
+        func updateUIView(_ uiView: MKMapView, context: Context) {
+            let region = MKCoordinateRegion(
+                center: coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03) // Adjust zoom level
+            )
+            uiView.setRegion(region, animated: true)
+              
+            // Apply custom appearance
+            if let overlay = uiView.overlays.first {
+                uiView.removeOverlay(overlay)
+            }
+        }
+    }
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                // MARK: - Header Section
-
-                headerSection
-                
-                // MARK: - Current Weather Section
-
-                currentWeatherSection
-                
-                // MARK: - Hourly Forecast Section
-
-                hourlyForecastSection
-                
-                // MARK: - Weather Details Grid
-
-                weatherDetailsGrid
-            }
-            .padding()
-        }
-        .background(gradient)
-        .navigationBarTitleDisplayMode(.inline)
-    }
-    
-    // MARK: - Header Section
-
-    private var headerSection: some View {
-        VStack(spacing: 5) {
-            Text(cityName)
-                .font(.title)
-                .bold()
-                .foregroundColor(.white)
-            
-            Text(weatherData.description.capitalized)
-                .font(.title3)
-                .foregroundColor(.white.opacity(0.8))
-        }
-    }
-    
-    // MARK: - Current Weather Section
-
-    private var currentWeatherSection: some View {
-        VStack(spacing: 10) {
-            Text("\(Int(round(weatherData.temperature)))°")
-                .font(.system(size: 80, weight: .thin))
-                .foregroundColor(.white)
-            
-            Text("Feels like \(Int(round(weatherData.feelsLike)))°")
-                .font(.title3)
-                .foregroundColor(.white.opacity(0.8))
-        }
-    }
-    
-    // MARK: - Hourly Forecast Section
-
-    private var hourlyForecastSection: some View {
-        VStack(alignment: .leading) {
-            Text("Hourly Forecast")
-                .font(.title3)
-                .bold()
-                .foregroundColor(.white)
-                .padding(.leading)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20) {
-                    ForEach(weatherData.hourlyForecast, id: \.hour) { forecast in
-                        VStack(spacing: 8) {
-                            Text(forecast.hour)
-                                .font(.caption)
+            ZStack {
+                // Background layers
+                MapView(coordinate: CLLocationCoordinate2D(
+                    latitude: city.coordinates.lat,
+                    longitude: city.coordinates.lon
+                ))
+                .ignoresSafeArea()
+                    
+                // Overlay layers
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.black.opacity(0.4),
+                        Color.black.opacity(0.2),
+                        Color.clear
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
+                    
+                // Content
+                VStack(spacing: 25) {
+                    // Top Navigation
+                    HStack {
+                        Button(action: { dismiss() }) {
+                            Image(systemName: "chevron.left")
                                 .foregroundColor(.white)
+                                .padding(12)
+                                .background(Color.white.opacity(0.2))
+                                .clipShape(Circle())
+                        }
+                        Spacer()
                             
-                            Image(systemName: forecast.icon)
-                                .font(.title2)
+                        Button(action: {}) {
+                            Image(systemName: "ellipsis")
                                 .foregroundColor(.white)
+                                .padding(12)
+                                .background(Color.white.opacity(0.2))
+                                .clipShape(Circle())
+                        }
+                    }
+                    .padding(.horizontal)
+                        
+                    // Location Info
+                    VStack(spacing: 8) {
+                        Text(city.name)
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
                             
-                            Text("\(Int(round(forecast.temperature)))°")
-                                .font(.title3)
-                                .foregroundColor(.white)
+                        Text("\(city.country) • \(formatDate(city.localTime))")
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding(.top, 10)
+                        
+                    // Current Weather
+                    VStack(spacing: 15) {
+                        AsyncImage(url: URL(string: "https://openweathermap.org/img/wn/\(city.weatherIcon)@2x.png")) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                        } placeholder: {
+                            ProgressView()
+                        }
                             
-                            if forecast.precipitation > 0 {
-                                Text("\(forecast.precipitation)%")
-                                    .font(.caption)
-                                    .foregroundColor(.blue)
+                        Text("\(Int(city.temperature))°")
+                            .font(.system(size: 80, weight: .thin))
+                            .foregroundColor(.white)
+                            
+                        Text(city.weatherDescription.capitalized)
+                            .font(.title3)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding(.vertical, 20)
+                        
+                    // Weather Details Grid
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
+                        WeatherDetailCard(icon: "thermometer", title: "Feels Like", value: "\(Int(city.temperature))°")
+                        WeatherDetailCard(icon: "humidity", title: "Humidity", value: "N/A%")
+                        WeatherDetailCard(icon: "wind", title: "Wind Speed", value: "N/A km/h")
+                        WeatherDetailCard(icon: "gauge", title: "Pressure", value: "N/A hPa")
+                    }
+                    .padding(.horizontal)
+                        
+                    // Hourly Forecast
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Hourly Forecast")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding(.horizontal)
+                            
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 20) {
+                                ForEach(0 ..< 24) { hour in
+                                    HourlyForecastItem(hour: hour)
+                                }
                             }
+                            .padding(.horizontal)
                         }
                     }
                 }
-                .padding()
+                .padding(.top, 50)
             }
-            .background(Color.white.opacity(0.1))
-            .cornerRadius(15)
         }
+        .ignoresSafeArea()
+        .navigationBarHidden(true)
     }
-    
-    // MARK: - Weather Details Grid
-
-    private var weatherDetailsGrid: some View {
-        LazyVGrid(columns: [
-            GridItem(.flexible()),
-            GridItem(.flexible())
-        ], spacing: 15) {
-            weatherDetailCard(title: "UV Index", value: "\(weatherData.uvIndex)", icon: "sun.max.fill")
-            weatherDetailCard(title: "Wind Speed", value: "\(Int(round(weatherData.windSpeed))) m/s", icon: "wind")
-            weatherDetailCard(title: "Humidity", value: "\(weatherData.humidity)%", icon: "humidity")
-            weatherDetailCard(title: "Pressure", value: "\(weatherData.pressure) hPa", icon: "gauge")
-            weatherDetailCard(title: "Visibility", value: String(format: "%.1f km", weatherData.visibility), icon: "eye.fill")
-        }
-    }
-    
-    private func weatherDetailCard(title: String, value: String, icon: String) -> some View {
-        VStack(spacing: 10) {
-            HStack {
-                Image(systemName: icon)
-                    .font(.title2)
-                Text(title)
-                    .font(.headline)
-            }
-            Text(value)
-                .font(.title3)
-                .bold()
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color.white.opacity(0.1))
-        .cornerRadius(15)
-        .foregroundColor(.white)
+        
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "E, d MMM"
+        return formatter.string(from: date)
     }
 }
 
-// MARK: - Preview Provider
-
-struct CityWeatherDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        CityWeatherDetailView(
-            latitude: 51.5074,
-            longitude: -0.1278,
-            cityName: "London",
-            weatherData: WeatherData(
-                temperature: 20.5,
-                feelsLike: 21.0,
-                uvIndex: 5,
-                windSpeed: 4.2,
-                humidity: 65,
-                pressure: 1015,
-                visibility: 10.0,
-                description: "Partly cloudy",
-                hourlyForecast: [
-                    HourlyForecast(hour: "Now", temperature: 20.5, icon: "cloud.sun.fill", precipitation: 10),
-                    HourlyForecast(hour: "14:00", temperature: 22.0, icon: "sun.max.fill", precipitation: 0),
-                    HourlyForecast(hour: "15:00", temperature: 21.5, icon: "cloud.fill", precipitation: 20)
-                ]
-            )
+// Weather Detail Card Component
+struct WeatherDetailCard: View {
+    let icon: String
+    let title: String
+    let value: String
+        
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.white)
+                
+            Text(title)
+                .font(.callout)
+                .foregroundColor(.white.opacity(0.7))
+                
+            Text(value)
+                .font(.title3)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 20)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.ultraThinMaterial)
+                .opacity(0.3)
         )
     }
 }
 
-// MARK: - Weather Data Models
-
-struct WeatherData {
-    let temperature: Double
-    let feelsLike: Double
-    let uvIndex: Int
-    let windSpeed: Double
-    let humidity: Int
-    let pressure: Int
-    let visibility: Double
-    let description: String
-    let hourlyForecast: [HourlyForecast]
+// Hourly Forecast Item
+struct HourlyForecastItem: View {
+    let hour: Int
+        
+    var body: some View {
+        VStack(spacing: 10) {
+            Text("\(hour):00")
+                .font(.callout)
+                .foregroundColor(.white)
+                
+            Image(systemName: "cloud.sun.fill")
+                .font(.title2)
+                .foregroundColor(.white)
+                
+            Text("24°")
+                .font(.title3)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+        }
+        .padding(.vertical, 15)
+        .padding(.horizontal, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(.ultraThinMaterial)
+                .opacity(0.3)
+        )
+    }
 }
 
-struct HourlyForecast {
-    let hour: String
-    let temperature: Double
-    let icon: String
-    let precipitation: Int
+struct CityWeatherDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        CityWeatherDetailView(
+            city: City(
+                name: "New York",
+                temperature: 25.0,
+                weatherDescription: "Clear sky",
+                weatherIcon: "01d",
+                localTime: Date(),
+                country: "US",
+                timeZone: "America/New_York",
+                coordinates: Coordinates(lat: 40.7128, lon: -74.0060)
+            ),
+            viewModel: WeatherViewModel()
+        )
+    }
 }

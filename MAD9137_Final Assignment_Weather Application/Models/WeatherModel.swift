@@ -45,7 +45,7 @@ struct WeatherDetail: Codable {
     let description: String
     let icon: String
     let hourlyForecast: [HourlyWeatherData]
-    
+
     init(temperature: Double, feelsLike: Double, humidity: Int, pressure: Int,
          windSpeed: Double, description: String, icon: String,
          hourlyForecast: [HourlyWeatherData])
@@ -188,7 +188,7 @@ struct HourlyWeatherData: Codable {
     }
 }
 
-struct City: Identifiable, Codable {
+struct City: Identifiable, Codable, Hashable {
     var id = UUID()
     let name: String
     let temperature: Double
@@ -208,5 +208,13 @@ struct City: Identifiable, Codable {
         self.country = country
         self.timeZone = timeZone
         self.coordinates = coordinates
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: City, rhs: City) -> Bool {
+        lhs.id == rhs.id
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct CityRowView: View {
     let city: City
     var onDelete: () -> Void
+    var onTap: () -> Void
     @State private var showingDeleteAlert = false
     @State private var currentTime: Date = .init()
     @State private var timer: Timer?
@@ -42,69 +43,70 @@ struct CityRowView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(alignment: .top, spacing: 0) {
-                        Text("\(Int(round(city.temperature)))")
-                            .font(.system(size: 72, weight: .light))
-                        Text("°C")
-                            .font(.system(size: 24, weight: .light))
-                            .padding(.top, 12)
-                    }
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(alignment: .top, spacing: 0) {
+                    Text("\(Int(round(city.temperature)))")
+                        .font(.system(size: 72, weight: .light))
+                    Text("°C")
+                        .font(.system(size: 24, weight: .light))
+                        .padding(.top, 12)
+                }
+                .foregroundColor(.white)
+                
+                Text(city.name)
+                    .font(.system(size: 32, weight: .regular))
                     .foregroundColor(.white)
-                    
-                    Text(city.name)
-                        .font(.system(size: 32, weight: .regular))
-                        .foregroundColor(.white)
-                    
-                    Text(formatTime(currentTime))
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(.white.opacity(0.8))
-                }
                 
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 2) {
-                    Button(action: {
-                        showingDeleteAlert = true
-                    }) {
-                        Image(systemName: "trash")
-                            .foregroundColor(.white.opacity(0.8))
-                            .font(.system(size: 20, weight: .bold))
-                    }
-                    .padding(.bottom, 12)
-                    .alert(isPresented: $showingDeleteAlert) {
-                        Alert(
-                            title: Text("Delete City"),
-                            message: Text("Are you sure you want to delete \(city.name)?"),
-                            primaryButton: .destructive(Text("Delete")) {
-                                onDelete()
-                            },
-                            secondaryButton: .cancel()
-                        )
-                    }
-                    
-                    AsyncImage(url: URL(string: "https://openweathermap.org/img/wn/\(city.weatherIcon)@2x.png")) { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 80, height: 80)
-                    } placeholder: {
-                        ProgressView()
-                            .tint(.white)
-                    }
-                    
-                    Text(city.weatherDescription.capitalized)
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                }
+                Text(formatTime(currentTime))
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(.white.opacity(0.8))
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            
+            Spacer()
+            
+            VStack(alignment: .trailing, spacing: 2) {
+                Button(action: {
+                    showingDeleteAlert = true
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.white.opacity(0.8))
+                        .font(.system(size: 20, weight: .bold))
+                }
+                .padding(.bottom, 12)
+                .zIndex(1)
+                .buttonStyle(PlainButtonStyle())
+                .alert(isPresented: $showingDeleteAlert) {
+                    Alert(
+                        title: Text("Delete City"),
+                        message: Text("Are you sure you want to delete \(city.name)?"),
+                        primaryButton: .destructive(Text("Delete")) {
+                            onDelete()
+                        },
+                        secondaryButton: .cancel()
+                    )
+                }
+                
+                AsyncImage(url: URL(string: "https://openweathermap.org/img/wn/\(city.weatherIcon)@2x.png")) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 80, height: 80)
+                } placeholder: {
+                    ProgressView()
+                        .tint(.white)
+                }
+                
+                Text(city.weatherDescription.capitalized)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+            }
         }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .contentShape(Rectangle())
         .background(Color.clear)
         .onAppear {
             updateTime()

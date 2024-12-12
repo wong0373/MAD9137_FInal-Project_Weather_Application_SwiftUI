@@ -11,10 +11,9 @@ struct CityListView: View {
     @EnvironmentObject var viewModel: WeatherViewModel
     @State private var showSearchView = false
     @State private var selectedCity: City?
-    @State private var navigationPath = NavigationPath()
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 BackgroundView()
                 MainContentView(
@@ -25,7 +24,9 @@ struct CityListView: View {
             .navigationBarSetup(
                 showSearchView: self.$showSearchView,
                 viewModel: self.viewModel
-            )
+            ).navigationDestination(for: City.self) { city in
+                CityWeatherDetailView(city: city, viewModel: self.viewModel)
+            }
         }
         .onAppear {
             self.viewModel.fetchAllCityWeather()
@@ -59,8 +60,6 @@ private struct MainContentView: View {
     }
 }
 
-// MARK: - Loading View
-
 private struct LoadingView: View {
     let isLoading: Bool
 
@@ -80,14 +79,17 @@ private struct CitiesList: View {
 
     var body: some View {
         ForEach(self.viewModel.cities) { city in
-            VStack(spacing: 0) {
-                CityRowView(
-                    city: city,
-                    onDelete: { self.viewModel.deleteCity(city) }
-//                    onTap: { self.selectedCity = city }
-                )
-
-                DividerView()
+            NavigationLink(value: city) {
+                VStack(spacing: 0) {
+                    CityRowView(
+                        city: city,
+                        onDelete: { self.viewModel.deleteCity(city) },
+                        onTap: {}
+                    )
+                    DividerView()
+                }
+                .buttonStyle(PlainButtonStyle())
+                .tint(.white)
             }
         }
     }
@@ -140,6 +142,10 @@ private extension View {
             .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }
+
+
+
+
 
 struct CityListView_Previews: PreviewProvider {
     static var previews: some View {

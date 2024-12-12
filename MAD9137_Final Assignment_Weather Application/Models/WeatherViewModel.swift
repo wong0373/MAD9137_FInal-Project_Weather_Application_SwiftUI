@@ -14,8 +14,7 @@ class WeatherViewModel: ObservableObject {
     @Published var error: Error?
     private let weatherService = WeatherService()
     private let userDefaultsKey = "savedCities"
-    @Published var selectedCityWeatherData: WeatherData?
-    
+
     init() {
         loadCities()
         // Fetch weather data for initial cities
