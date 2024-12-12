@@ -8,37 +8,42 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var viewModel: WeatherViewModel
+    @AppStorage("refreshInterval") private var refreshInterval = 300.0 // default 5 minutes
+
+    let refreshIntervalOptions: [(String, TimeInterval)] = [
+        ("1 minute", 60),
+        ("5 minutes", 300),
+        ("15 minutes", 900),
+        ("30 minutes", 1800),
+        ("1 hour", 3600)
+    ]
+
     var body: some View {
         NavigationStack {
-            List {
-                Section(header: Text("General")) {
-                    NavigationLink(destination: Text("About")) {
-                        Label("About", systemImage: "info.circle")
+            ZStack {
+                List {
+                    Section("Auto Refresh") {
+                        Picker("Refresh Interval", selection: $refreshInterval) {
+                            ForEach(refreshIntervalOptions, id: \.1) { option in
+                                Text(option.0).tag(option.1)
+                            }
+                        }
+                        .onChange(of: refreshInterval) { newValue in
+                            viewModel.updateRefreshTimer(interval: newValue)
+                        }
                     }
 
-                    NavigationLink(destination: Text("Help")) {
-                        Label("Help", systemImage: "questionmark.circle")
+                    Section {
+                        NavigationLink {
+                            AboutView()
+                                .toolbar(.hidden, for: .tabBar)
+                        } label: {
+                            Text("About")
+                        }
                     }
                 }
-
-                Section(header: Text("Preferences")) {
-                    NavigationLink(destination: Text("Temperature Unit")) {
-                        Label("Temperature Unit", systemImage: "thermometer")
-                    }
-
-                    NavigationLink(destination: Text("Notifications")) {
-                        Label("Notifications", systemImage: "bell")
-                    }
-                }
-
-                Section(header: Text("App Info")) {
-                    HStack {
-                        Label("Version", systemImage: "apps.iphone")
-                        Spacer()
-                        Text("1.0.0")
-                            .foregroundColor(.gray)
-                    }
-                }
+                .scrollContentBackground(.hidden)
             }
             .navigationTitle("Settings")
         }
@@ -47,7 +52,7 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        MainTabView()
+        SettingsView()
             .environmentObject(WeatherViewModel())
     }
 }

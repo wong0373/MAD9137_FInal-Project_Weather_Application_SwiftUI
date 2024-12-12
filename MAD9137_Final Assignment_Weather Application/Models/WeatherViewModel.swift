@@ -13,10 +13,12 @@ class WeatherViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var error: Error?
     @Published var hourlyForecast: [HourlyWeatherData] = []
+    @Published var isTabBarVisible = true
     
     private let weatherService = WeatherService()
     private let userDefaultsKey = "savedCities"
-
+    private var refreshTimer: Timer?
+    
     init() {
         loadCities()
         // Fetch weather data for initial cities
@@ -115,5 +117,16 @@ class WeatherViewModel: ObservableObject {
             }
             print("Error fetching forecast: \(error)")
         }
+    }
+    
+    func updateRefreshTimer(interval: TimeInterval) {
+        refreshTimer?.invalidate()
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            self?.fetchAllCityWeather()
+        }
+    }
+        
+    deinit {
+        refreshTimer?.invalidate()
     }
 }
