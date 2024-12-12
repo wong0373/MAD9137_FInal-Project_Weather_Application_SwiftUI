@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CityListView: View {
-    @StateObject private var viewModel = WeatherViewModel()
+    @EnvironmentObject var viewModel: WeatherViewModel
+    @State private var showSearchView = false
 
     var body: some View {
         NavigationView {
@@ -18,11 +19,19 @@ struct CityListView: View {
 
                 ScrollView {
                     VStack(spacing: 0) {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .tint(.white)
+                                .scaleEffect(1.5)
+                                .padding()
+                        }
                         ForEach(viewModel.cities) { city in
-                            CityRowView(city: city)
+                            CityRowView(city: city, onDelete: {
+                                viewModel.deleteCity(city)
+                            })
                             Rectangle()
                                 .fill(Color.white).opacity(0.5)
-                                .frame(width: .infinity, height: 2)
+                                .frame(width: 370, height: 2)
                                 .padding(.horizontal, 20)
                         }
                     }.background(Color.clear)
@@ -36,7 +45,7 @@ struct CityListView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        // Add city action
+                        showSearchView = true
                     }) {
                         ZStack {
                             Circle()
@@ -48,6 +57,9 @@ struct CityListView: View {
                         }
                     }
                 }
+            }.sheet(isPresented: $showSearchView) {
+                SearchCityView()
+                    .environmentObject(viewModel)
             }
             .toolbarColorScheme(.dark, for: .navigationBar)
         }
@@ -57,6 +69,9 @@ struct CityListView: View {
     }
 }
 
-#Preview {
-    CityListView()
+struct CityListView_Previews: PreviewProvider {
+    static var previews: some View {
+        CityListView()
+            .environmentObject(WeatherViewModel())
+    }
 }
