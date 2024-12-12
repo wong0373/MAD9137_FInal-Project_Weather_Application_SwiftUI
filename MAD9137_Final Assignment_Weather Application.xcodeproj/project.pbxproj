@@ -11,11 +11,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1F671C322D0A78B90000E008 /* ViewModels */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		1FB103AE2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "MAD9137_Final Assignment_Weather Application";
@@ -39,7 +34,6 @@
 			children = (
 				1FB103AE2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application */,
 				1FB104142D08C1C5001A3C85 /* MAD9137_Final Assignment_Weather Application.app */,
-				1F671C322D0A78B90000E008 /* ViewModels */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,7 +53,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				1F671C322D0A78B90000E008 /* ViewModels */,
 				1FB103AE2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application */,
 			);
 			name = "MAD9137_Final Assignment_Weather Application";
