@@ -8,7 +8,7 @@
 import Foundation
 
 class WeatherService: ObservableObject {
-    private let apiKey = "c080ccfd5187d10f8981d2b2641dc086"
+    private let apiKey = "cb1e891a8c80cd3b5ee42aa2cdf452ab"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
     private let oneCallURL = "https://api.openweathermap.org/data/2.5/onecall"
     

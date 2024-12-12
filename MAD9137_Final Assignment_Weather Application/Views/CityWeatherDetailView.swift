@@ -48,7 +48,7 @@ struct CityWeatherDetailView: View {
         return Color(
             hue: (1.0 - normalized) * 2 / 3,
             saturation: 0.9,
-            brightness: 0.7
+            brightness: 0.8
         )
     }
     
@@ -85,8 +85,7 @@ struct CityWeatherDetailView: View {
     }
   
     private var weatherDetails: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
-            WeatherDetailCard(icon: "sun.max.fill", title: "UV Index", value: "\(Int(city.uvi ?? 0))")
+        HStack(spacing: 13) {
             WeatherDetailCard(icon: "wind", title: "Wind", value: "\(Int(city.windSpeed)) m/s")
             WeatherDetailCard(icon: "humidity", title: "Humidity", value: "\(city.humidity)%")
         }
@@ -133,7 +132,7 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ uiView: MKMapView, context: Context) {
         let region = MKCoordinateRegion(
             center: coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
+            span: MKCoordinateSpan(latitudeDelta: 0.07, longitudeDelta: 0.07)
         )
         uiView.setRegion(region, animated: true)
         
@@ -149,7 +148,7 @@ struct WeatherDetailCard: View {
     let value: String
     
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 5) {
             Image(systemName: icon)
                 .font(.title)
                 .fontWeight(.semibold)
