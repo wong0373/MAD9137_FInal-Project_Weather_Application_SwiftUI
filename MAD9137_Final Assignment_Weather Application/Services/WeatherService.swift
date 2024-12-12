@@ -8,7 +8,7 @@
 import Foundation
 
 class WeatherService: ObservableObject {
-    private let apiKey = "bd5e378503939ddaee76f12ad7a97608"
+    private let apiKey = "7952697f77e6f0cb825f70e56819523d"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
 
     @Published var cities: [City] = []
@@ -33,7 +33,7 @@ class WeatherService: ObservableObject {
     }
     
     func fetchDetailedWeather(for city: City) async throws -> (WeatherDetail, [HourlyWeatherData]) {
-        let urlString = "\(baseURL)?lat=\(city.coordinates.lat)&lon=\(city.coordinates.lon)&exclude=minutely,daily,alerts&appid=\(apiKey)&units=metric"
+        let urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=\(city.coordinates.lat)&lon=\(city.coordinates.lon)&units=metric&appid=\(apiKey)"
                
         guard let url = URL(string: urlString) else {
             throw WeatherError.invalidURL
@@ -73,7 +73,46 @@ class WeatherService: ObservableObject {
             
         return (weatherDetail, Array(hourlyForecasts))
     }
+    
+    func fetchForecast(lat: Double, lon: Double) async throws -> [HourlyWeatherData] {
+        let urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
         
+        guard let url = URL(string: urlString) else {
+            throw WeatherError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200
+        else {
+            throw WeatherError.invalidResponse
+        }
+        
+        struct ForecastResponse: Codable {
+            struct ForecastItem: Codable {
+                let dt: Int
+                let main: MainWeather
+                let weather: [Weather]
+                let pop: Double
+            }
+            
+            let list: [ForecastItem]
+        }
+        
+        let decoder = JSONDecoder()
+        let forecastResponse = try decoder.decode(ForecastResponse.self, from: data)
+        
+        return forecastResponse.list.prefix(8).map { item in // Changed to 8 for 24-hour forecast (3-hour intervals)
+            HourlyWeatherData(
+                time: Date(timeIntervalSince1970: TimeInterval(item.dt)),
+                temperature: item.main.temp,
+                icon: item.weather.first?.icon ?? "",
+                precipitation: item.pop * 100
+            )
+        }
+    }
+
     private func formatHour(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
@@ -104,9 +143,10 @@ struct CurrentWeather: Codable {
     let weather: [Weather]
 }
 
-struct HourlyWeather: Codable {
+struct HourlyWeather: Codable, Identifiable {
     let dt: Int
     let temp: Double
     let weather: [Weather]
     let pop: Double?
+    var id: Int { dt }
 }

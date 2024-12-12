@@ -41,6 +41,11 @@ struct CityWeatherDetailView: View {
             }
         }
         .navigationBarHidden(true)
+        .task {
+            print("Starting forecast fetch for \(city.name)")
+            await viewModel.fetchForecast(for: city)
+            print("Forecast data count: \(viewModel.hourlyForecast.count)")
+        }
     }
     
     private func color(for temperature: Double) -> Color {
@@ -98,25 +103,36 @@ struct CityWeatherDetailView: View {
     
     private var hourlyForecast: some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text("Hourly Forecast")
+            Text("5-Day Forecast")
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
-            
+                   
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
-                    ForEach(0 ..< 24) { hour in
-                        HourlyForecastCard(hour: hour)
+                    ForEach(viewModel.hourlyForecast) { forecast in
+                        HourlyForecastCard(
+                            hour: formatForecastTime(forecast.time),
+                            temperature: Int(forecast.temperature),
+                            icon: forecast.icon
+                        )
                     }
                 }
+                .padding(.horizontal)
             }
         }
-        .padding(.top, 40)
+        .padding()
     }
-    
+
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "E, d MMM"
+        return formatter.string(from: date)
+    }
+
+    private func formatHour(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:00"
         return formatter.string(from: date)
     }
 }
@@ -147,6 +163,12 @@ struct MapView: UIViewRepresentable {
     }
 }
 
+private func formatForecastTime(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "HH:mm\nMM/dd"
+    return formatter.string(from: date)
+}
+
 struct WeatherDetailCard: View {
     let icon: String
     let title: String
@@ -175,19 +197,29 @@ struct WeatherDetailCard: View {
 }
 
 struct HourlyForecastCard: View {
-    let hour: Int
+    let hour: String
+    let temperature: Int
+    let icon: String
     
     var body: some View {
         VStack(spacing: 10) {
-            Text("\(hour):00")
+            Text(hour)
                 .font(.callout)
                 .foregroundColor(.white)
+                .multilineTextAlignment(.center)
             
-            Image(systemName: "cloud.sun.fill")
-                .font(.title2)
-                .foregroundColor(.white)
+            AsyncImage(url: URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+            } placeholder: {
+                Image(systemName: "cloud.sun.fill")
+                    .font(.title2)
+                    .foregroundColor(.white)
+            }
             
-            Text("24°")
+            Text("\(temperature)°")
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundColor(.white)

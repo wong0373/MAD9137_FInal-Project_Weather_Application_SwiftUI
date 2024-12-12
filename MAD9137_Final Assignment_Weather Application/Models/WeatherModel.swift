@@ -168,11 +168,19 @@ struct HourlyForecastResponse: Codable {
     let weather: [Weather]
 }
 
-struct HourlyWeatherData: Codable {
+struct HourlyWeatherData: Identifiable, Codable {
+    let id = UUID()
     let time: Date
     let temperature: Double
     let icon: String
     let precipitation: Double
+    
+    init(time: Date, temperature: Double, icon: String, precipitation: Double) {
+        self.time = time
+        self.temperature = temperature
+        self.icon = icon
+        self.precipitation = precipitation
+    }
     
     init(from response: HourlyForecastResponse) {
         time = Date(timeIntervalSince1970: TimeInterval(response.dt))

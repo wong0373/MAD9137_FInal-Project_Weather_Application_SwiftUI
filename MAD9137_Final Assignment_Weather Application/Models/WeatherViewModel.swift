@@ -12,6 +12,8 @@ class WeatherViewModel: ObservableObject {
     @Published var cities: [City] = []
     @Published var isLoading = false
     @Published var error: Error?
+    @Published var hourlyForecast: [HourlyWeatherData] = []
+    
     private let weatherService = WeatherService()
     private let userDefaultsKey = "savedCities"
 
@@ -92,6 +94,26 @@ class WeatherViewModel: ObservableObject {
                 self.cities = updatedCities
                 saveCities()
             }
+        }
+    }
+
+    func fetchForecast(for city: City) async {
+        isLoading = true
+        do {
+            let forecast = try await weatherService.fetchForecast(
+                lat: city.coordinates.lat,
+                lon: city.coordinates.lon
+            )
+            await MainActor.run {
+                self.hourlyForecast = forecast
+                self.isLoading = false
+            }
+        } catch {
+            await MainActor.run {
+                self.error = error
+                self.isLoading = false
+            }
+            print("Error fetching forecast: \(error)")
         }
     }
 }
