@@ -36,7 +36,9 @@ struct SearchCityView: View {
                     localTime: Date(),
                     country: weatherData.sys.country,
                     timeZone: nil,
-                    coordinates: Coordinates(lat: weatherData.coord.lat, lon: weatherData.coord.lon)
+                    coordinates: Coordinates(lat: weatherData.coord.lat, lon: weatherData.coord.lon),
+                    humidity: weatherData.main.humidity,
+                    windSpeed: weatherData.wind.speed
                 )
                 await MainActor.run {
                     weatherViewModel.addCity(city)
@@ -67,7 +69,9 @@ struct SearchCityView: View {
                     localTime: Date(),
                     country: weatherData.sys.country,
                     timeZone: nil,
-                    coordinates: Coordinates(lat: weatherData.coord.lat, lon: weatherData.coord.lon)
+                    coordinates: Coordinates(lat: weatherData.coord.lat, lon: weatherData.coord.lon),
+                    humidity: weatherData.main.humidity,
+                    windSpeed: weatherData.wind.speed
                 )
                 await MainActor.run {
                     searchResults = [city]

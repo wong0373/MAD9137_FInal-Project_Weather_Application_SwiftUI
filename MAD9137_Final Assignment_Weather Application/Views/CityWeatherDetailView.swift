@@ -85,9 +85,14 @@ struct CityWeatherDetailView: View {
     }
   
     private var weatherDetails: some View {
-        HStack(spacing: 13) {
-            WeatherDetailCard(icon: "wind", title: "Wind", value: "\(Int(city.windSpeed)) m/s")
-            WeatherDetailCard(icon: "humidity", title: "Humidity", value: "\(city.humidity)%")
+        ZStack {
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.ultraThinMaterial)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            HStack(spacing: 13) {
+                WeatherDetailCard(icon: "wind", title: "Wind", value: "\(Int(city.windSpeed)) m/s")
+                WeatherDetailCard(icon: "humidity", title: "Humidity", value: "\(city.humidity)%")
+            }
         }
     }
     
@@ -166,10 +171,6 @@ struct WeatherDetailCard: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 20)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(.ultraThinMaterial)
-        )
     }
 }
 
@@ -211,7 +212,9 @@ struct CityWeatherDetailView_Previews: PreviewProvider {
                 localTime: Date(),
                 country: "US",
                 timeZone: "America/New_York",
-                coordinates: Coordinates(lat: 40.7128, lon: -74.0060)
+                coordinates: Coordinates(lat: 40.7128, lon: -74.0060),
+                humidity: 65,
+                windSpeed: 5.2
                 
             ),
             viewModel: WeatherViewModel()

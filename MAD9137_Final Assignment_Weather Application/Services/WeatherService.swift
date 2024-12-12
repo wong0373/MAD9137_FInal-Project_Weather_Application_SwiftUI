@@ -8,10 +8,9 @@
 import Foundation
 
 class WeatherService: ObservableObject {
-    private let apiKey = "cb1e891a8c80cd3b5ee42aa2cdf452ab"
+    private let apiKey = "bd5e378503939ddaee76f12ad7a97608"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
-    private let oneCallURL = "https://api.openweathermap.org/data/2.5/onecall"
-    
+
     @Published var cities: [City] = []
     
     func fetchWeather(for cityName: String) async throws -> WeatherResponse {
@@ -34,7 +33,7 @@ class WeatherService: ObservableObject {
     }
     
     func fetchDetailedWeather(for city: City) async throws -> (WeatherDetail, [HourlyWeatherData]) {
-        let urlString = "\(oneCallURL)?lat=\(city.coordinates.lat)&lon=\(city.coordinates.lon)&exclude=minutely,daily,alerts&appid=\(apiKey)&units=metric"
+        let urlString = "\(baseURL)?lat=\(city.coordinates.lat)&lon=\(city.coordinates.lon)&exclude=minutely,daily,alerts&appid=\(apiKey)&units=metric"
                
         guard let url = URL(string: urlString) else {
             throw WeatherError.invalidURL

@@ -15,6 +15,11 @@ struct WeatherResponse: Codable {
     let sys: Sys
     let timezone: Int?
     let coord: Coordinates
+    let wind: Wind
+}
+
+struct Wind: Codable {
+    let speed: Double
 }
 
 struct Sys: Codable {
@@ -198,11 +203,10 @@ struct City: Identifiable, Codable, Hashable {
     let country: String
     let timeZone: String?
     let coordinates: Coordinates
-    let uvi: Double?
     let humidity: Int
     let windSpeed: Double
     
-    init(name: String, temperature: Double, weatherDescription: String, weatherIcon: String, localTime: Date, country: String, timeZone: String?, coordinates: Coordinates) {
+    init(name: String, temperature: Double, weatherDescription: String, weatherIcon: String, localTime: Date, country: String, timeZone: String?, coordinates: Coordinates, humidity: Int, windSpeed: Double) {
         self.name = name
         self.temperature = temperature
         self.weatherDescription = weatherDescription
@@ -211,9 +215,8 @@ struct City: Identifiable, Codable, Hashable {
         self.country = country
         self.timeZone = timeZone
         self.coordinates = coordinates
-        uvi = 0
-        humidity = 0
-        windSpeed = 0
+        self.humidity = humidity
+        self.windSpeed = windSpeed
     }
     
     func hash(into hasher: inout Hasher) {
