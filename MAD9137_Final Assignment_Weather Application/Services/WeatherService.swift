@@ -10,9 +10,34 @@ import Foundation
 class WeatherService: ObservableObject {
     private let apiKey = "aadcba574a28095c11c6b00b1dc3e7fc"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
+    private let geocodingBaseURL = "https://api.openweathermap.org/geo/1.0/direct"
 
     @Published var cities: [City] = []
     
+    func geocodeCity(_ query: String) async throws -> [GeocodingResult] {
+        let urlString = "\(geocodingBaseURL)?q=\(query)&limit=20&appid=\(apiKey)"
+        
+        guard let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
+            throw WeatherError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200
+        else {
+            throw WeatherError.invalidResponse
+        }
+        
+        let decoder = JSONDecoder()
+        do {
+            let results = try decoder.decode([GeocodingResult].self, from: data)
+            return results
+        } catch {
+            throw WeatherError.invalidData
+        }
+    }
+
     func fetchWeather(for cityName: String) async throws -> WeatherResponse {
         let urlString = "\(baseURL)?q=\(cityName)&appid=\(apiKey)&units=metric"
         guard let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
@@ -149,4 +174,16 @@ struct HourlyWeather: Codable, Identifiable {
     let weather: [Weather]
     let pop: Double?
     var id: Int { dt }
+}
+
+struct GeocodingResult: Codable, Identifiable {
+    let name: String
+    let lat: Double
+    let lon: Double
+    let country: String
+    let state: String?
+    
+    var id: String {
+        "\(name)\(country)\(lat)\(lon)"
+    }
 }

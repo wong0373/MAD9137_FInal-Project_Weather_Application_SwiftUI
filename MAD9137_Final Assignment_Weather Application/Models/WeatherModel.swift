@@ -188,18 +188,9 @@ struct HourlyWeatherData: Identifiable, Codable {
         icon = response.weather.first?.icon ?? ""
         precipitation = response.pop
     }
-    
-//    func encode(to encoder: Encoder) throws {
-//        var container = encoder.singleValueContainer()
-//        let response = HourlyForecastResponse(
-//            dt: Int(time.timeIntervalSince1970),
-//            temp: temperature,
-//            pop: precipitation,
-//            weather: [Weather(description: "", icon: icon)]
-//        )
-//        try container.encode(response)
-//    }
 }
+
+
 
 struct City: Identifiable, Codable, Hashable {
     var id = UUID()
