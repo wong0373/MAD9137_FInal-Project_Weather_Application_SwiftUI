@@ -18,10 +18,10 @@ struct CityRowView: View {
             return Date()
         }
            
-        // Get current UTC time
+      
         let currentUTC = Date()
            
-        // Add the timezone offset to get local time
+       
         return currentUTC.addingTimeInterval(TimeInterval(timezoneOffset))
     }
        
@@ -32,7 +32,7 @@ struct CityRowView: View {
     }
        
     private func startTimer() {
-        // Update immediately
+       
         updateTime()
            
         // Calculate delay until next minute

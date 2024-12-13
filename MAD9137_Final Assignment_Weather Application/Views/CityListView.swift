@@ -132,3 +132,4 @@ struct CityListView_Previews: PreviewProvider {
             .environmentObject(WeatherViewModel())
     }
 }
+

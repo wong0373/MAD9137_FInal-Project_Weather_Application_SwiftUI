@@ -5,7 +5,7 @@ struct MainTabView: View {
 
     init() {
         let appearance = UITabBarAppearance()
-        appearance.configureWithTransparentBackground() // Makes the tab bar transparent
+        appearance.configureWithTransparentBackground() 
         appearance.backgroundColor = .clear
 
         UITabBar.appearance().scrollEdgeAppearance = appearance

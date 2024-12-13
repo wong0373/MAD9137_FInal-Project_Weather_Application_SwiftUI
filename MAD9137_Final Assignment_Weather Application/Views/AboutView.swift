@@ -18,7 +18,7 @@ struct AboutView: View {
                         .shadow(radius: 10, x: 0, y: 5)
                         .overlay(
                             Circle()
-                                .stroke(.white, lineWidth: 2) // Add a white border
+                                .stroke(.white, lineWidth: 2)
                         )
                         .onTapGesture {
                             tapCount += 1
