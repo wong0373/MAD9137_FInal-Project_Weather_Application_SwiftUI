@@ -28,6 +28,7 @@ struct CityListView: View {
                 CityWeatherDetailView(city: city, viewModel: self.viewModel)
             }
         }
+
         .onAppear {
             self.viewModel.fetchAllCityWeather()
         }
@@ -39,12 +40,12 @@ private struct BackgroundView: View {
         LinearGradient(
             gradient: Gradient(colors: [
                 Color(red: 135/255, green: 206/255, blue: 235/255),
-                Color(red: 65/255, green: 105/255, blue: 225/255)
+                Color(red: 35/255, green: 35/255, blue: 25/255)
             ]),
             startPoint: .top,
             endPoint: .bottom
         )
-        .edgesIgnoringSafeArea(.all)
+        .ignoresSafeArea(.all)
     }
 }
 
@@ -54,16 +55,16 @@ private struct MainContentView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack {
                 LoadingView(isLoading: self.viewModel.isLoading)
                 CitiesList(
                     viewModel: self.viewModel,
                     selectedCity: self.$selectedCity
                 )
             }
-            .background(Color.clear)
+            .padding(.top, 20)
+            .scrollIndicators(.hidden)
         }
-        .scrollIndicators(.hidden)
     }
 }
 
@@ -95,7 +96,6 @@ private struct CitiesList: View {
                     )
                     DividerView()
                 }
-                .buttonStyle(PlainButtonStyle())
                 .tint(.white)
             }
         }
@@ -144,7 +144,7 @@ private extension View {
                 SearchCityView()
                     .environmentObject(viewModel)
             }
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(.hidden)
     }
 }
 

@@ -16,7 +16,7 @@ struct AboutView: View {
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 135/255, green: 206/255, blue: 235/255),
-                    Color(red: 65/255, green: 105/255, blue: 225/255)
+                    Color(red: 35/255, green: 35/255, blue: 25/255)
                 ]),
                 startPoint: .top,
                 endPoint: .bottom
@@ -64,7 +64,7 @@ struct AboutView: View {
                     }
                     
                     // App Info
-                    VStack(spacing: 10) {
+                    VStack(spacing: 15) {
                         Text("Version 1.0")
                             .font(.title2)
                             .foregroundColor(.white)
@@ -73,13 +73,11 @@ struct AboutView: View {
                     Text("© 2024 Terry Wong")
                         .font(.title2)
                         .foregroundColor(.white)
-                        .padding(.top, 30)
                 }
                 .padding()
             }
-        }
-        
-        .navigationTitle("About")
+        }.toolbarBackground(.hidden)
+            .navigationTitle("About")
     }
 }
 

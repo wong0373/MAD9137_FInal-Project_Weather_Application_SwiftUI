@@ -45,6 +45,7 @@ struct SettingsView: View {
                 }
                 .scrollContentBackground(.hidden)
             }
+            .toolbarBackground(.hidden)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -59,7 +60,7 @@ struct SettingsView: View {
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 135/255, green: 206/255, blue: 235/255),
-                    Color(red: 65/255, green: 105/255, blue: 225/255)
+                    Color(red: 35/255, green: 35/255, blue: 25/255)
                 ]),
                 startPoint: .top,
                 endPoint: .bottom
