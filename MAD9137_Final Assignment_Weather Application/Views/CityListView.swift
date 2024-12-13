@@ -99,7 +99,7 @@ private struct AddButton: View {
                     .foregroundColor(.white)
                     .frame(width: 25, height: 25)
                 Image(systemName: "plus")
-                    .foregroundColor(Color(red: 0.4, green: 0.5, blue: 0.9))
+                    .foregroundColor(.black)
                     .font(.subheadline)
             }
         }

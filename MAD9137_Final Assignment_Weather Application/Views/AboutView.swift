@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AboutView: View {
     @State private var tapCount = 0
-    @State private var showKidPhoto = false
+    @State private var showHiddenPhoto = false
 
     var body: some View {
         ZStack {
@@ -10,7 +10,7 @@ struct AboutView: View {
 
             ScrollView {
                 VStack(alignment: .center, spacing: 40) {
-                    Image(showKidPhoto ? "hiddenPic" : "profilePic")
+                    Image(showHiddenPhoto ? "hiddenPic" : "profilePic")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 200, height: 200)
@@ -24,7 +24,7 @@ struct AboutView: View {
                             tapCount += 1
                             if tapCount >= 3 {
                                 withAnimation(.spring()) {
-                                    showKidPhoto.toggle()
+                                    showHiddenPhoto.toggle()
                                 }
                                 tapCount = 0
                             }
