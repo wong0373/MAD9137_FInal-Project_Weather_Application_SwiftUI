@@ -13,7 +13,7 @@ class WeatherService: ObservableObject {
     private let geocodingBaseURL = "https://api.openweathermap.org/geo/1.0/direct"
 
     @Published var cities: [City] = []
-    
+     
     func geocodeCity(_ query: String) async throws -> [GeocodingResult] {
         let urlString = "\(geocodingBaseURL)?q=\(query)&limit=20&appid=\(apiKey)"
         
