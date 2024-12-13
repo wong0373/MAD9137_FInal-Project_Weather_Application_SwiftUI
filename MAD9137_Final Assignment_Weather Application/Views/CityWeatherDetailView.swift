@@ -145,6 +145,7 @@ struct MapView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
+        mapView.mapType = .hybridFlyover
         mapView.showsUserLocation = true
         mapView.isZoomEnabled = false
         mapView.isScrollEnabled = false
@@ -156,7 +157,7 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ uiView: MKMapView, context: Context) {
         let region = MKCoordinateRegion(
             center: coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.07, longitudeDelta: 0.07)
+            span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
         )
         uiView.setRegion(region, animated: true)
         
