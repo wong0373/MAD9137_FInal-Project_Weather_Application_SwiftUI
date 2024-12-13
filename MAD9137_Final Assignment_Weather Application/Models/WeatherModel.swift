@@ -36,22 +36,18 @@ struct Coordinates: Codable {
 
 struct WeatherDetail: Codable {
     let temperature: Double
-    let feelsLike: Double
     let humidity: Int
-    let pressure: Int
     let windSpeed: Double
     let description: String
     let icon: String
     let hourlyForecast: [HourlyWeatherData]
 
-    init(temperature: Double, feelsLike: Double, humidity: Int, pressure: Int,
+    init(temperature: Double, humidity: Int,
          windSpeed: Double, description: String, icon: String,
          hourlyForecast: [HourlyWeatherData])
     {
         self.temperature = temperature
-        self.feelsLike = feelsLike
         self.humidity = humidity
-        self.pressure = pressure
         self.windSpeed = windSpeed
         self.description = description
         self.icon = icon
@@ -67,9 +63,7 @@ struct WeatherDetail: Codable {
     
     enum MainKeys: String, CodingKey {
         case temperature = "temp"
-        case feelsLike = "feels_like"
         case humidity
-        case pressure
     }
     
     enum WindKeys: String, CodingKey {
@@ -81,9 +75,7 @@ struct WeatherDetail: Codable {
         
         let mainContainer = try container.nestedContainer(keyedBy: MainKeys.self, forKey: .main)
         temperature = try mainContainer.decode(Double.self, forKey: .temperature)
-        feelsLike = try mainContainer.decode(Double.self, forKey: .feelsLike)
         humidity = try mainContainer.decode(Int.self, forKey: .humidity)
-        pressure = try mainContainer.decode(Int.self, forKey: .pressure)
         
         let windContainer = try container.nestedContainer(keyedBy: WindKeys.self, forKey: .wind)
         windSpeed = try windContainer.decode(Double.self, forKey: .windSpeed)
@@ -111,9 +103,7 @@ struct WeatherDetail: Codable {
         
         var mainContainer = container.nestedContainer(keyedBy: MainKeys.self, forKey: .main)
         try mainContainer.encode(temperature, forKey: .temperature)
-        try mainContainer.encode(feelsLike, forKey: .feelsLike)
         try mainContainer.encode(humidity, forKey: .humidity)
-        try mainContainer.encode(pressure, forKey: .pressure)
         
         var windContainer = container.nestedContainer(keyedBy: WindKeys.self, forKey: .wind)
         try windContainer.encode(windSpeed, forKey: .windSpeed)
@@ -136,9 +126,7 @@ struct WeatherDetail: Codable {
 struct DetailedWeatherResponse: Codable {
     struct Current: Codable {
         let temp: Double
-        let feels_like: Double
         let humidity: Int
-        let pressure: Int
         let wind_speed: Double
         let weather: [Weather]
     }
@@ -162,7 +150,7 @@ struct HourlyForecastResponse: Codable {
 }
 
 struct HourlyWeatherData: Identifiable, Codable {
-    let id = UUID()
+    var id = UUID()
     let time: Date
     let temperature: Double
     let icon: String
@@ -182,8 +170,6 @@ struct HourlyWeatherData: Identifiable, Codable {
         precipitation = response.pop
     }
 }
-
-
 
 struct City: Identifiable, Codable, Hashable {
     var id = UUID()

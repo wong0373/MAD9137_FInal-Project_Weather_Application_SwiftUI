@@ -1,10 +1,3 @@
-//
-//  WeatherService.swift
-//  MAD9137_Final Assignment_Weather Application
-//
-//  Created by Terry Wong on 11/12/2024.
-//
-
 import Foundation
 
 class WeatherService: ObservableObject {
@@ -87,9 +80,7 @@ class WeatherService: ObservableObject {
                
         let weatherDetail = WeatherDetail(
             temperature: detailResponse.current.temp,
-            feelsLike: detailResponse.current.feels_like,
             humidity: detailResponse.current.humidity,
-            pressure: detailResponse.current.pressure,
             windSpeed: detailResponse.current.wind_speed,
             description: detailResponse.current.weather.first?.description ?? "",
             icon: detailResponse.current.weather.first?.icon ?? "",
@@ -136,12 +127,6 @@ class WeatherService: ObservableObject {
                 precipitation: item.pop * 100
             )
         }
-    }
-
-    private func formatHour(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: date)
     }
 }
         

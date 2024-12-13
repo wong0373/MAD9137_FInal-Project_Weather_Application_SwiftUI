@@ -20,10 +20,8 @@ struct CityWeatherDetailView: View {
            
             LinearGradient(
                 gradient: Gradient(colors: [
-                    color(for: city.temperature).opacity(1.2),
-                    color(for: city.temperature).opacity(0.7),
+                    color(for: city.temperature).opacity(1.0),
                     color(for: city.temperature).opacity(0.6),
-                    color(for: city.temperature).opacity(0.4),
                     color(for: city.temperature).opacity(0.2),
                     color(for: city.temperature).opacity(0.1),
          
@@ -45,9 +43,7 @@ struct CityWeatherDetailView: View {
         }.toolbar(.hidden, for: .tabBar)
             .navigationBarHidden(true)
             .task {
-                print("Starting forecast fetch for \(city.name)")
                 await viewModel.fetchForecast(for: city)
-                print("Forecast data count: \(viewModel.hourlyForecast.count)")
             }
     }
 
@@ -245,7 +241,7 @@ struct CityWeatherDetailView_Previews: PreviewProvider {
         CityWeatherDetailView(
             city: City(
                 name: "New York",
-                temperature: 12.0,
+                temperature: 35.0,
                 weatherDescription: "Clear sky",
                 weatherIcon: "01d",
                 localTime: Date(),

@@ -26,7 +26,7 @@ class WeatherViewModel: ObservableObject {
             }
         }
         
-        // Set default cities if no saved data
+        // Set default cities if no cities are fetched
         cities = [
             City(name: "Ottawa", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String(), coordinates: Coordinates(lat: 0, lon: 0), humidity: 0, windSpeed: 0),
             City(name: "Tokyo", temperature: 0, weatherDescription: "", weatherIcon: "", localTime: Date(), country: String(), timeZone: String(), coordinates: Coordinates(lat: 0, lon: 0), humidity: 0, windSpeed: 0),

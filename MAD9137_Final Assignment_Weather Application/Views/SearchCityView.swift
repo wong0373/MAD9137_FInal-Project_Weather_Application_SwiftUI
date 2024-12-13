@@ -11,10 +11,12 @@ struct SearchCityView: View {
     @State private var selectedCity: String? = nil
 
     let weatherService = WeatherService()
+    // Create few cities to show up for the view
     let popularCities = ["Tokyo", "New York", "Dubai", "London"]
     let allCities = ["Hong Kong", "Beijing", "Delhi", "Chennai", "Istanbul",
                      "Singapore", "Rome", "Mumbai", "Jakarta", "Tokyo", "Seoul"]
 
+    // function to fetch the city name and add
     func fetchAndAddCity(_ result: GeocodingResult) {
         isLoading = true
         selectedCity = result.name
@@ -50,7 +52,7 @@ struct SearchCityView: View {
         }
     }
 
-    // For popular cities and all cities list
+    // For popular cities and all cities list, fetch the city name and add
     func fetchAndAddCityByName(_ cityName: String) {
         isLoading = true
         selectedCity = cityName
@@ -136,22 +138,13 @@ struct SearchCityView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                // Your existing gradient background
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(red: 135/255, green: 206/255, blue: 235/255),
-                        Color(red: 35/255, green: 35/255, blue: 25/255)
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                BackgroundView()
+                    .ignoresSafeArea()
 
-                VStack(spacing: 20) {
+                VStack(spacing: 25) {
                     if !searchText.isEmpty {
                         searchResultsView
                     } else {
-                        // Your existing popular cities section
                         VStack(alignment: .leading) {
                             Text("Popular Cities")
                                 .foregroundColor(.white)
@@ -166,12 +159,12 @@ struct SearchCityView: View {
                                                 .fontWeight(.bold)
                                             if selectedCity == city && isLoading {
                                                 ProgressView()
-                                                    .scaleEffect(0.8)
+                                                    .scaleEffect(0.1)
                                             }
                                         }
                                         .padding(.horizontal, 20)
-                                        .padding(.vertical, 8)
-                                        .background(Color.gray.opacity(0.2))
+                                        .padding(.vertical, 10)
+                                        .background(Color.white.opacity(0.2))
                                         .cornerRadius(20)
                                         .foregroundColor(.white)
                                         .onTapGesture {
@@ -183,9 +176,8 @@ struct SearchCityView: View {
                             }
                         }
 
-                        // Your existing all cities list
                         ScrollView {
-                            VStack(spacing: 0) {
+                            VStack {
                                 ForEach(allCities, id: \.self) { city in
                                     HStack {
                                         Text(city)
@@ -194,7 +186,7 @@ struct SearchCityView: View {
                                         Spacer()
                                         if selectedCity == city && isLoading {
                                             ProgressView()
-                                                .scaleEffect(0.8)
+                                                .scaleEffect(0.1)
                                         } else {
                                             Image(systemName: "plus")
                                                 .foregroundColor(.white)
@@ -207,15 +199,16 @@ struct SearchCityView: View {
                                         fetchAndAddCityByName(city)
                                     }
                                     Divider()
-                                        .background(Color.gray.opacity(0.3))
+                                        .frame(width: 370, height: 0.7)
+                                        .background(Color.white)
                                 }
                             }
                         }
                     }
                 }
             }
-            .searchable(text: $searchText, prompt: "Search for a city...")
-            .onChange(of: searchText) { newValue in
+            .searchable(text: $searchText, prompt: "Search for a city")
+            .onChange(of: searchText) { _, newValue in
                 if newValue.count >= 3 {
                     performSearch(query: newValue)
                 } else {

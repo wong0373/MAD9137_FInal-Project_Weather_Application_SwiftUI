@@ -8,11 +8,9 @@ struct MainTabView: View {
         appearance.configureWithTransparentBackground() // Makes the tab bar transparent
         appearance.backgroundColor = .clear
 
-        // For iOS 15 and later
         UITabBar.appearance().scrollEdgeAppearance = appearance
         UITabBar.appearance().standardAppearance = appearance
 
-        // Remove the tab bar border
         UITabBar.appearance().backgroundImage = UIImage()
         UITabBar.appearance().shadowImage = UIImage()
     }
