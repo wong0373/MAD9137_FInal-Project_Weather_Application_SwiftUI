@@ -133,8 +133,6 @@ private extension View {
         self
             .navigationTitle("Algonquin Weather")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color(red: 0.4, green: 0.5, blue: 0.9), for: .navigationBar)
-            .toolbarBackground(.visible)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     AddButton {

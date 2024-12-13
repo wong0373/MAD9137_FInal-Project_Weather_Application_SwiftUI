@@ -10,11 +10,25 @@ import SwiftUI
 struct AboutView: View {
     @State private var tapCount = 0
     @State private var showKidPhoto = false
+    
+    private struct BackgroundView: View {
+        var body: some View {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 135/255, green: 206/255, blue: 235/255),
+                    Color(red: 65/255, green: 105/255, blue: 225/255)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .edgesIgnoringSafeArea(.all)
+        }
+    }
 
     var body: some View {
         ZStack {
             // Background
-            Color(red: 0.4, green: 0.5, blue: 0.9)
+            BackgroundView()
                 .ignoresSafeArea()
             
             ScrollView {
@@ -64,6 +78,7 @@ struct AboutView: View {
                 .padding()
             }
         }
+        
         .navigationTitle("About")
     }
 }

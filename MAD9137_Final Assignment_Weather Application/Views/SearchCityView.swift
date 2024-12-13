@@ -15,7 +15,7 @@ struct SearchCityView: View {
     @State private var alertMessage = ""
     @State private var isLoading = false
     @State private var searchResults: [City] = []
-    @State private var selectedCity: String? = nil // Track which city is being loaded
+    @State private var selectedCity: String? = nil
 
     let weatherService = WeatherService()
     let popularCities = ["Tokyo", "New York", "Dubai", "London"]
@@ -87,26 +87,45 @@ struct SearchCityView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.white
-                    .ignoresSafeArea()
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(red: 135/255, green: 206/255, blue: 235/255),
+                        Color(red: 65/255, green: 105/255, blue: 225/255)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
 
                 VStack(spacing: 20) {
                     if !searchText.isEmpty {
                         List(searchResults) { city in
+
                             HStack {
                                 Text(city.name)
+                                    .foregroundColor(.white)
+                                    .fontWeight(.semibold)
+
                                 Spacer()
                                 Text(city.country)
+                                    .foregroundColor(.white)
+                                    .fontWeight(.semibold)
                             }
+                            .listRowBackground(Color.clear)
                             .onTapGesture {
                                 weatherViewModel.addCity(city)
                                 dismiss()
                             }
                         }
+                        .scrollContentBackground(.hidden)
+                        .listStyle(PlainListStyle())
+                        .background(Color.clear)
+
                     } else {
                         VStack(alignment: .leading) {
                             Text("Popular Cities")
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
                                 .padding(.leading)
 
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -114,6 +133,7 @@ struct SearchCityView: View {
                                     ForEach(popularCities, id: \.self) { city in
                                         HStack {
                                             Text(city)
+                                                .fontWeight(.bold)
                                             if selectedCity == city && isLoading {
                                                 ProgressView()
                                                     .scaleEffect(0.8)
@@ -123,7 +143,7 @@ struct SearchCityView: View {
                                         .padding(.vertical, 8)
                                         .background(Color.gray.opacity(0.2))
                                         .cornerRadius(20)
-                                        .foregroundColor(.black)
+                                        .foregroundColor(.white)
                                         .onTapGesture {
                                             fetchAndAddCity(city)
                                         }
@@ -138,14 +158,16 @@ struct SearchCityView: View {
                                 ForEach(allCities, id: \.self) { city in
                                     HStack {
                                         Text(city)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.white)
+                                            .fontWeight(.bold)
                                         Spacer()
                                         if selectedCity == city && isLoading {
                                             ProgressView()
                                                 .scaleEffect(0.8)
                                         } else {
                                             Image(systemName: "plus")
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.white)
+                                                .fontWeight(.bold)
                                         }
                                     }
                                     .padding()
@@ -187,7 +209,7 @@ struct SearchCityView: View {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(.white)
                     }
                 }
             }

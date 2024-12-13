@@ -12,8 +12,8 @@ struct MainTabView: View {
 
     init() {
         // Make tab bar transparent
-        UITabBar.appearance().backgroundColor = .black.withAlphaComponent(0.8)
         UITabBar.appearance().barTintColor = .clear
+        // Make the tab bar items be white
     }
 
     var body: some View {
@@ -32,6 +32,7 @@ struct MainTabView: View {
                     Text("Settings")
                 }
         }
+        .accentColor(.white)
     }
 }
 

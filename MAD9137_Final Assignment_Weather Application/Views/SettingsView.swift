@@ -47,9 +47,6 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color(red: 0.4, green: 0.5, blue: 0.9), for: .navigationBar)
-            .toolbarBackground(.visible)
-            .toolbarColorScheme(.dark, for: .navigationBar)
         }
         .onAppear {
             // Ensure timer is running with current interval when view appears
