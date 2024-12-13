@@ -21,8 +21,9 @@ class WeatherViewModel: ObservableObject {
     
     init() {
         loadCities()
-        // Fetch weather data for initial cities
-        fetchAllCityWeather()
+        // Start the refresh timer with default interval
+        let defaultInterval = UserDefaults.standard.double(forKey: "refreshInterval")
+        updateRefreshTimer(interval: defaultInterval > 0 ? defaultInterval : 60.0)
     }
     
     private func loadCities() {
@@ -67,12 +68,11 @@ class WeatherViewModel: ObservableObject {
     func fetchAllCityWeather() {
         Task {
             isLoading = true
-            defer { isLoading = false }
             
             var updatedCities: [City] = []
             for cityName in cities.map({ $0.name }) {
                 do {
-                    let weatherResponse = try await weatherService.fetchWeather(for: cityName) // Changed from response to weatherResponse
+                    let weatherResponse = try await weatherService.fetchWeather(for: cityName)
                     let city = City(
                         name: weatherResponse.name,
                         temperature: weatherResponse.main.temp,
@@ -96,6 +96,8 @@ class WeatherViewModel: ObservableObject {
                 self.cities = updatedCities
                 saveCities()
             }
+            
+            isLoading = false
         }
     }
 
@@ -120,10 +122,21 @@ class WeatherViewModel: ObservableObject {
     }
     
     func updateRefreshTimer(interval: TimeInterval) {
+        // Invalidate existing timer
         refreshTimer?.invalidate()
+        
+        // Create new timer
         refreshTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
-            self?.fetchAllCityWeather()
+            Task { @MainActor in
+                self?.fetchAllCityWeather()
+            }
         }
+        
+        // Immediately fetch weather
+        fetchAllCityWeather()
+        
+        // Store the interval in UserDefaults
+        UserDefaults.standard.set(interval, forKey: "refreshInterval")
     }
         
     deinit {
