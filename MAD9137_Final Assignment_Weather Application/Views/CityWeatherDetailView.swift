@@ -54,7 +54,7 @@ struct CityWeatherDetailView: View {
     private func color(for temperature: Double) -> Color {
         let normalized = (temperature + 30) / 70
         return Color(
-            hue: (1.0 - normalized) * 2 / 3,
+            hue: (0.9 - normalized) * 2 / 3,
             saturation: 1.0,
             brightness: 0.7
         )
@@ -241,7 +241,7 @@ struct CityWeatherDetailView_Previews: PreviewProvider {
         CityWeatherDetailView(
             city: City(
                 name: "New York",
-                temperature: 35.0,
+                temperature: 38.0,
                 weatherDescription: "Clear sky",
                 weatherIcon: "01d",
                 localTime: Date(),
