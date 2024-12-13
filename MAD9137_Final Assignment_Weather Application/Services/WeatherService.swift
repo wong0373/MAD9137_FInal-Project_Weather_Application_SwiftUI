@@ -1,7 +1,7 @@
 import Foundation
 
 class WeatherService: ObservableObject {
-    private let apiKey = ""YOUR_API_KEY""
+    private let apiKey = "YOUR_API_KEY"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
     private let geocodingBaseURL = "https://api.openweathermap.org/geo/1.0/direct"
 
