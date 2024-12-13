@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1F671C9F2D0BD76B0000E008 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1F671C9D2D0BD7660000E008 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		1F671C9D2D0BD7660000E008 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1FB104142D08C1C5001A3C85 /* MAD9137_Final Assignment_Weather Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MAD9137_Final Assignment_Weather Application.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -34,6 +39,7 @@
 			children = (
 				1FB103AE2D08B2E6001A3C85 /* MAD9137_Final Assignment_Weather Application */,
 				1FB104142D08C1C5001A3C85 /* MAD9137_Final Assignment_Weather Application.app */,
+				1F671C9D2D0BD7660000E008 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,6 +107,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F671C9F2D0BD76B0000E008 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
