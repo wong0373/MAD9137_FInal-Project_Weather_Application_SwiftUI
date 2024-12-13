@@ -36,8 +36,15 @@ struct CityListView: View {
 
 private struct BackgroundView: View {
     var body: some View {
-        Color(red: 0.4, green: 0.5, blue: 0.9)
-            .ignoresSafeArea(.all)
+        LinearGradient(
+            gradient: Gradient(colors: [
+                Color(red: 135/255, green: 206/255, blue: 235/255),
+                Color(red: 65/255, green: 105/255, blue: 225/255)
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

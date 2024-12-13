@@ -21,27 +21,47 @@ struct CityRowView: View {
         return formatter
     }()
     
-    private func formatTime(_ date: Date) -> String {
-        timeFormatter.string(from: date)
+    private func getCurrentLocalTime(for city: City) -> Date {
+        guard let timezoneOffset = city.timeZone.flatMap({ Int($0) }) else {
+            return Date()
+        }
+           
+        // Get current UTC time
+        let currentUTC = Date()
+           
+        // Add the timezone offset to get local time
+        return currentUTC.addingTimeInterval(TimeInterval(timezoneOffset))
     }
-    
+       
+    private func formatTime(_ date: Date) -> String {
+        // Set formatter to UTC to avoid double timezone conversion
+        timeFormatter.timeZone = TimeZone(identifier: "UTC")
+        return timeFormatter.string(from: date)
+    }
+       
     private func startTimer() {
+        // Update immediately
+        updateTime()
+           
+        // Calculate delay until next minute
         let calendar = Calendar.current
         let seconds = calendar.component(.second, from: Date())
         let delay = 60 - Double(seconds)
-        
+           
+        // Schedule first update at the start of next minute
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             updateTime()
+            // Then update every minute
             timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
                 updateTime()
             }
         }
     }
-    
+
     private func updateTime() {
-        currentTime = Date()
+        currentTime = getCurrentLocalTime(for: city)
     }
-    
+       
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
@@ -109,7 +129,6 @@ struct CityRowView: View {
         .contentShape(Rectangle())
         .background(Color.clear)
         .onAppear {
-            updateTime()
             startTimer()
         }
         .onDisappear {
