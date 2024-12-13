@@ -30,6 +30,6 @@ This weather application allows users to:
 The application uses the OpenWeatherMap API. To use this application:
 
 1. Sign up for a free API key at [OpenWeatherMap](https://openweathermap.org/api)
-2. Replace the `apiKey` constant in `WeatherService.swift`:
+2. Replace the `apiKey` constant in `WeatherService.swift` to your own API KEY from Openweather:
 ```swift
 private let apiKey = "YOUR_API_KEY"
