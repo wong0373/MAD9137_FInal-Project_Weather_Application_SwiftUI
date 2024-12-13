@@ -142,12 +142,6 @@ struct CityWeatherDetailView: View {
         formatter.dateFormat = "E, d MMM"
         return formatter.string(from: date)
     }
-
-    private func formatHour(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:00"
-        return formatter.string(from: date)
-    }
 }
 
 struct MapView: UIViewRepresentable {

@@ -13,7 +13,6 @@ class WeatherViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var error: Error?
     @Published var hourlyForecast: [HourlyWeatherData] = []
-    @Published var isTabBarVisible = true
     
     private let weatherService = WeatherService()
     private let userDefaultsKey = "savedCities"

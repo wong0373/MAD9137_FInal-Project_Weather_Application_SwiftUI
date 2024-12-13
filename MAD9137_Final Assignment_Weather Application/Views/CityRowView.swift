@@ -10,7 +10,6 @@ import SwiftUI
 struct CityRowView: View {
     let city: City
     var onDelete: () -> Void
-    var onTap: () -> Void
     @State private var showingDeleteAlert = false
     @State private var currentTime: Date = .init()
     @State private var timer: Timer?

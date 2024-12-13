@@ -91,8 +91,7 @@ private struct CitiesList: View {
                 VStack(spacing: 0) {
                     CityRowView(
                         city: city,
-                        onDelete: { self.viewModel.deleteCity(city) },
-                        onTap: {}
+                        onDelete: { self.viewModel.deleteCity(city) }
                     )
                     DividerView()
                 }

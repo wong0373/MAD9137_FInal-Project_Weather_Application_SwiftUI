@@ -145,35 +145,10 @@ class WeatherService: ObservableObject {
     }
 }
         
-private func formatHour(from date: Date) -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "HH:mm"
-    return formatter.string(from: date)
-}
-
 enum WeatherError: Error {
     case invalidURL
     case invalidResponse
     case invalidData
-}
-
-struct CurrentWeather: Codable {
-    let temp: Double
-    let feels_like: Double
-    let pressure: Int
-    let humidity: Int
-    let uvi: Double?
-    let visibility: Int
-    let wind_speed: Double
-    let weather: [Weather]
-}
-
-struct HourlyWeather: Codable, Identifiable {
-    let dt: Int
-    let temp: Double
-    let weather: [Weather]
-    let pop: Double?
-    var id: Int { dt }
 }
 
 struct GeocodingResult: Codable, Identifiable {
